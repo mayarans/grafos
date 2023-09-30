@@ -163,11 +163,9 @@ class MeuGrafo(GrafoListaAdjacencia):
         '''
         arvore_dfs = MeuGrafo()
         arvore_dfs.adiciona_vertice(V)
-        print(f'vertices do grafo: {arvore_dfs.__rotulos_vertices()}')
 
         def dfs_auxiliar(V, arvore_dfs):
             destinos_ordenados = self.__destinos_de_um_vertice(V)
-            print(f'destinos ordenados: {destinos_ordenados}')
             for aresta, vertice_oposto in destinos_ordenados.items():
                 if not arvore_dfs.existe_rotulo_vertice(vertice_oposto):
                     arvore_dfs.adiciona_vertice(vertice_oposto)

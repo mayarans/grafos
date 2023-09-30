@@ -245,6 +245,25 @@ class TestGrafo(unittest.TestCase):
         self.g_p_dfs.adiciona_aresta("a8", "M", "T")
         self.g_p_dfs.adiciona_aresta("a9", "T", "Z")
 
+        self.g_c_dfs = MeuGrafo()
+        self.g_c_dfs.adiciona_vertice("J")
+        self.g_c_dfs.adiciona_vertice("C")
+        self.g_c_dfs.adiciona_vertice("E")
+        self.g_c_dfs.adiciona_vertice("P")
+        self.g_c_dfs.adiciona_aresta("a1", "J", "C")
+        self.g_c_dfs.adiciona_aresta("a4", "C", "E")
+        self.g_c_dfs.adiciona_aresta("a6", "E", "P")
+
+        self.g_l1_dfs = MeuGrafo()
+        self.g_l1_dfs.adiciona_vertice("A")
+        self.g_l1_dfs.adiciona_vertice("B")
+        self.g_l1_dfs.adiciona_aresta("a2", "A", "B")
+
+        self.g_d_dfs = MeuGrafo()
+        self.g_d_dfs.adiciona_vertice("A")
+        self.g_d_dfs.adiciona_vertice("B")
+        self.g_d_dfs.adiciona_aresta("asd", "A", "B")
+
         self.g1_r_bfs = MeuGrafo()
         self.g1_r_bfs.adiciona_vertice("A")
         self.g1_r_bfs.adiciona_vertice("B")
@@ -282,6 +301,25 @@ class TestGrafo(unittest.TestCase):
         self.g_p_bfs.adiciona_aresta("a6", "C", "T")
         self.g_p_bfs.adiciona_aresta("a7", "C", "M")
         self.g_p_bfs.adiciona_aresta("a9", "T", "Z")
+
+        self.g_c_bfs = MeuGrafo()
+        self.g_c_bfs.adiciona_vertice("J")
+        self.g_c_bfs.adiciona_vertice("C")
+        self.g_c_bfs.adiciona_vertice("E")
+        self.g_c_bfs.adiciona_vertice("P")
+        self.g_c_bfs.adiciona_aresta("a1", "J", "C")
+        self.g_c_bfs.adiciona_aresta("a2", "J", "E")
+        self.g_c_bfs.adiciona_aresta("a3", "J", "P")
+
+        self.g_l1_bfs = MeuGrafo()
+        self.g_l1_bfs.adiciona_vertice("A")
+        self.g_l1_bfs.adiciona_vertice("B")
+        self.g_l1_bfs.adiciona_aresta("a2", "A", "B")
+
+        self.g_d_bfs = MeuGrafo()
+        self.g_d_bfs.adiciona_vertice("A")
+        self.g_d_bfs.adiciona_vertice("B")
+        self.g_d_bfs.adiciona_aresta("asd", "A", "B")
 
     def test_adiciona_aresta(self):
         self.assertTrue(self.g_p.adiciona_aresta('a10', 'J', 'C'))
@@ -396,7 +434,13 @@ class TestGrafo(unittest.TestCase):
     def test_dfs(self):
         self.assertEqual(self.g_p.dfs('J'), self.g_p_dfs)
         self.assertEqual(self.g1_dfs_bfs.dfs('K'), self.g1_r_dfs)
+        self.assertEqual(self.g_c.dfs('J'), self.g_c_dfs)
+        self.assertEqual(self.g_l1.dfs('A'), self.g_l1_dfs)
+        self.assertEqual(self.g_d.dfs('A'), self.g_d_dfs)
 
     def test_bfs(self):
         self.assertEqual(self.g_p.bfs('J'), self.g_p_bfs)
         self.assertEqual(self.g1_dfs_bfs.bfs('K'), self.g1_r_bfs)
+        self.assertEqual(self.g_c.bfs('J'), self.g_c_bfs)
+        self.assertEqual(self.g_l1.bfs('A'), self.g_l1_bfs)
+        self.assertEqual(self.g_d.bfs('A'), self.g_d_bfs)
