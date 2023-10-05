@@ -200,3 +200,114 @@ class MeuGrafo(GrafoListaAdjacencia):
             return arvore_bfs
 
         return bfs_auxiliar(V, arvore_bfs)
+
+    def conexo(self):
+        vertices_do_grafo = self.__rotulos_vertices()
+        arvore_dfs = self.dfs(vertices_do_grafo[0])
+
+        vertices_da_arvore = arvore_dfs.__rotulos_vertices()
+
+        for vertice in vertices_do_grafo:
+            if vertice not in vertices_da_arvore:
+                return False
+
+        return True
+
+    def ha_ciclo(self):
+        vertices_do_grafo = self.__rotulos_vertices()
+
+        def ciclo_auxiliar(V, lista_ciclo):
+            destinos = dict()
+            arestas_incidentes = sorted(self.arestas_sobre_vertice(V))
+
+            if V not in vertices_visitados:
+                vertices_visitados[V] = list()
+
+            for a in arestas_incidentes:
+                if self.arestas[a].v1.rotulo == V and self.arestas[a].v2.rotulo == V:
+                    destinos[a] = self.arestas[a].v1.rotulo
+                elif self.arestas[a].v1.rotulo != V:
+                    destinos[a] = self.arestas[a].v1.rotulo
+                elif self.arestas[a].v2.rotulo != V:
+                    destinos[a] = self.arestas[a].v2.rotulo
+
+            for aresta, vertice_oposto in destinos.items():
+                if aresta not in lista_ciclo and vertice_oposto == vertice_pai:
+                    lista_ciclo.append(aresta)
+                    lista_ciclo.append(vertice_oposto)
+                    return lista_ciclo
+                elif aresta not in lista_ciclo and vertice_oposto not in lista_ciclo and vertice_oposto not in vertices_visitados[V]:
+                    vertices_visitados[V].append(vertice_oposto)
+                    lista_ciclo.append(aresta)
+                    lista_ciclo.append(vertice_oposto)
+                    return ciclo_auxiliar(vertice_oposto, lista_ciclo)
+                elif aresta == list(destinos.keys())[-1]:
+                    vertices_visitados[V] = list()
+                    lista_ciclo.pop()
+                    if not lista_ciclo:
+                        return False
+                    lista_ciclo.pop()
+                    return ciclo_auxiliar(lista_ciclo[-1], lista_ciclo)
+            return False
+
+        for v in vertices_do_grafo:
+            vertice_pai = v
+            vertices_visitados = dict()
+
+            lista_ciclo = list()
+            lista_ciclo.append(vertice_pai)
+
+            resultado = ciclo_auxiliar(vertice_pai, lista_ciclo)
+
+            if resultado:
+                return resultado
+
+        return False
+
+    def caminho(self, n):
+        vertices_do_grafo = self.__rotulos_vertices()
+        def caminho_auxiliar(V, lista_caminho, tamanho_atual):
+            if tamanho_atual == n:
+                return lista_caminho
+
+            destinos_ordenados = self.__destinos_de_um_vertice(V)
+
+            if V not in vertices_visitados:
+                vertices_visitados[V] = list()
+
+
+            for aresta, vertice_oposto in destinos_ordenados.items():
+                if aresta not in lista_caminho and vertice_oposto not in lista_caminho and vertice_oposto not in vertices_visitados[V]:
+                    vertices_visitados[V].append(vertice_oposto)
+                    lista_caminho.append(aresta)
+                    lista_caminho.append(vertice_oposto)
+                    tamanho_atual += 1
+                    return caminho_auxiliar(vertice_oposto, lista_caminho, tamanho_atual)
+                elif (aresta not in lista_caminho) and (vertice_pai == vertice_oposto) and (tamanho_atual + 1 == n):
+                    lista_caminho.append(aresta)
+                    lista_caminho.append(vertice_oposto)
+                    tamanho_atual += 1
+                    return lista_caminho
+                elif aresta == list(destinos_ordenados.keys())[-1]:
+                    vertices_visitados[V] = list()
+                    lista_caminho.pop()
+                    if not lista_caminho:
+
+                        return False
+                    lista_caminho.pop()
+                    tamanho_atual -= 1
+                    return caminho_auxiliar(lista_caminho[-1], lista_caminho, tamanho_atual)
+
+        for v in vertices_do_grafo:
+            tamanho_atual = 0
+            vertice_pai = v
+            vertices_visitados = dict()
+
+            lista_caminho = list()
+            lista_caminho.append(vertice_pai)
+            resultado = caminho_auxiliar(v, lista_caminho, tamanho_atual)
+
+            if resultado:
+                return resultado
+
+        return False

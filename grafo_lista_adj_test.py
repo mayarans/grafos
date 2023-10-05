@@ -444,3 +444,38 @@ class TestGrafo(unittest.TestCase):
         self.assertEqual(self.g_c.bfs('J'), self.g_c_bfs)
         self.assertEqual(self.g_l1.bfs('A'), self.g_l1_bfs)
         self.assertEqual(self.g_d.bfs('A'), self.g_d_bfs)
+
+    def test_conexo(self):
+        self.assertTrue(self.g_p.conexo())
+        self.assertTrue(self.g_p_sem_paralelas.conexo())
+        self.assertTrue(self.g_c.conexo())
+        self.assertTrue(self.g_c2.conexo())
+        self.assertTrue(self.g_c3.conexo())
+        self.assertFalse(self.g_l1.conexo())
+        self.assertFalse(self.g_l2.conexo())
+        self.assertFalse(self.g_l3.conexo())
+        self.assertTrue(self.g_l4.conexo())
+        self.assertTrue(self.g_l5.conexo())
+        self.assertFalse(self.g_d.conexo())
+        self.assertFalse(self.g_d2.conexo())
+
+    def test_ha_ciclo(self):
+        self.assertEqual(self.g_p.ha_ciclo(), ['C', 'a2', 'E', 'a3', 'C'])
+        self.assertEqual(self.g_l1.ha_ciclo(), ['A', 'a1', 'A'])
+        self.assertEqual(self.g_c.ha_ciclo(), ['J', 'a1', 'C', 'a4', 'E', 'a2', 'J'])
+        self.assertFalse(self.g_d.ha_ciclo())
+        self.assertFalse(self.g_d2.ha_ciclo())
+        self.assertEqual(self.g1_dfs_bfs.ha_ciclo(), ['A', '1', 'B', '11', 'F', '10', 'H', '9', 'G', '2', 'A'])
+
+    def test_caminho(self):
+        self.assertEqual(self.g_p.caminho(4), ['J', 'a1', 'C', 'a7', 'M', 'a8', 'T', 'a9', 'Z'])
+        self.assertFalse(self.g_p.caminho(5))
+        self.assertEqual(self.g_p3.caminho(3), ['J', 'a', 'C', 'a6', 'T', 'a8', 'M'])
+        self.assertEqual(self.g_p3.caminho(4), ['J', 'a', 'C', 'a7', 'M', 'a8', 'T', 'a9', 'Z'])
+        self.assertFalse(self.g_p3.caminho(5))
+        self.assertFalse(self.g_d.caminho(5))
+        self.assertEqual(self.g1_dfs_bfs.caminho(6), ['A', '1', 'B', '11', 'F', '10', 'H', '9', 'G', '4', 'K', '5', 'J'])
+        self.assertEqual(self.g_c2.caminho(1), ['Nina', 'amiga', 'Maria'])
+        self.assertFalse(self.g_c2.caminho(2))
+        self.assertEqual(self.g_l1.caminho(1), ['A', 'a2', 'B'])
+        self.assertFalse(self.g_l1.caminho(2))
