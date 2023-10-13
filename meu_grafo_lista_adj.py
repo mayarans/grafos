@@ -266,6 +266,8 @@ class MeuGrafo(GrafoListaAdjacencia):
 
     def caminho(self, n):
         vertices_do_grafo = self.__rotulos_vertices()
+        if n == 0:
+            return False
         def caminho_auxiliar(V, lista_caminho, tamanho_atual):
             if tamanho_atual == n:
                 return lista_caminho

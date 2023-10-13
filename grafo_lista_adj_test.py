@@ -321,6 +321,16 @@ class TestGrafo(unittest.TestCase):
         self.g_d_bfs.adiciona_vertice("B")
         self.g_d_bfs.adiciona_aresta("asd", "A", "B")
 
+        # Grafo cíclico
+        self.g_ciclico = MeuGrafo()
+        self.g_ciclico.adiciona_vertice("A")
+        self.g_ciclico.adiciona_vertice("B")
+        self.g_ciclico.adiciona_vertice("C")
+
+        self.g_ciclico.adiciona_aresta("a1", "A", "B")
+        self.g_ciclico.adiciona_aresta("a2", "B", "C")
+        self.g_ciclico.adiciona_aresta("a3", "C", "A")
+
     def test_adiciona_aresta(self):
         self.assertTrue(self.g_p.adiciona_aresta('a10', 'J', 'C'))
         a = Aresta("zxc", self.g_p.get_vertice("C"), self.g_p.get_vertice("Z"))
@@ -466,6 +476,7 @@ class TestGrafo(unittest.TestCase):
         self.assertFalse(self.g_d.ha_ciclo())
         self.assertFalse(self.g_d2.ha_ciclo())
         self.assertEqual(self.g1_dfs_bfs.ha_ciclo(), ['A', '1', 'B', '11', 'F', '10', 'H', '9', 'G', '2', 'A'])
+        self.assertEqual(self.g_ciclico.ha_ciclo(), ['A', 'a1', 'B', 'a2', 'C', 'a3', 'A'])
 
     def test_caminho(self):
         self.assertEqual(self.g_p.caminho(4), ['J', 'a1', 'C', 'a7', 'M', 'a8', 'T', 'a9', 'Z'])
@@ -479,3 +490,5 @@ class TestGrafo(unittest.TestCase):
         self.assertFalse(self.g_c2.caminho(2))
         self.assertEqual(self.g_l1.caminho(1), ['A', 'a2', 'B'])
         self.assertFalse(self.g_l1.caminho(2))
+        self.assertFalse(self.g_l4.caminho(1))
+        self.assertEqual(self.g_ciclico.caminho(3), ['A', 'a1', 'B', 'a2', 'C', 'a3', 'A'])
