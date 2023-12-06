@@ -1,5 +1,6 @@
 from bibgrafo.grafo_lista_adjacencia import GrafoListaAdjacencia
 from bibgrafo.grafo_errors import *
+from queue import PriorityQueue
 
 
 class MeuGrafo(GrafoListaAdjacencia):
@@ -19,7 +20,6 @@ class MeuGrafo(GrafoListaAdjacencia):
 
         return lista_vertices_incidentes
 
-
     def __rotulos_vertices(self):
         '''
         Função auxiliar que retorna uma lista com os rótulos
@@ -30,7 +30,6 @@ class MeuGrafo(GrafoListaAdjacencia):
             lista_vertices.append(vertice.rotulo)
 
         return lista_vertices
-
 
     def vertices_nao_adjacentes(self):
         '''
@@ -45,11 +44,11 @@ class MeuGrafo(GrafoListaAdjacencia):
         for vertice in self.vertices:
             for i in range(len(lista_vertices)):
                 lista_vertices_incidentes = self.__vertices_incidentes(vertice.rotulo)
-                if lista_vertices[i] not in lista_vertices_incidentes and lista_vertices[i] != vertice.rotulo and f'{vertice.rotulo}-{lista_vertices[i]}'[::-1] not in conjunto:
+                if lista_vertices[i] not in lista_vertices_incidentes and lista_vertices[
+                    i] != vertice.rotulo and f'{vertice.rotulo}-{lista_vertices[i]}'[::-1] not in conjunto:
                     conjunto.append(f'{vertice.rotulo}-{lista_vertices[i]}')
 
         return set(conjunto)
-
 
     def ha_laco(self):
         '''
@@ -60,7 +59,6 @@ class MeuGrafo(GrafoListaAdjacencia):
             if self.arestas[aresta].v1 == self.arestas[aresta].v2:
                 return True
         return False
-
 
     def grau(self, V=''):
         '''
@@ -81,7 +79,6 @@ class MeuGrafo(GrafoListaAdjacencia):
                 grau += 1
 
         return grau
-
 
     def ha_paralelas(self):
         '''
@@ -107,7 +104,6 @@ class MeuGrafo(GrafoListaAdjacencia):
                         listaVerticesIncidentes.append(verticeIncidente)
         return False
 
-
     def arestas_sobre_vertice(self, V):
         '''
         Provê uma lista que contém os rótulos das arestas que incidem sobre o vértice passado como parâmetro
@@ -126,7 +122,6 @@ class MeuGrafo(GrafoListaAdjacencia):
         else:
             raise VerticeInvalidoError("O vértice não existe no grafo")
 
-
     def eh_completo(self):
         '''
         Verifica se o grafo é completo.
@@ -135,7 +130,6 @@ class MeuGrafo(GrafoListaAdjacencia):
         if len(self.vertices_nao_adjacentes()) > 0 or self.ha_laco() or self.ha_paralelas():
             return False
         return True
-
 
     def __destinos_de_um_vertice(self, V):
         '''
@@ -236,7 +230,8 @@ class MeuGrafo(GrafoListaAdjacencia):
                     lista_ciclo.append(aresta)
                     lista_ciclo.append(vertice_oposto)
                     return lista_ciclo
-                elif aresta not in lista_ciclo and vertice_oposto not in lista_ciclo and vertice_oposto not in vertices_visitados[V]:
+                elif aresta not in lista_ciclo and vertice_oposto not in lista_ciclo and vertice_oposto not in \
+                        vertices_visitados[V]:
                     vertices_visitados[V].append(vertice_oposto)
                     lista_ciclo.append(aresta)
                     lista_ciclo.append(vertice_oposto)
@@ -268,6 +263,7 @@ class MeuGrafo(GrafoListaAdjacencia):
         vertices_do_grafo = self.__rotulos_vertices()
         if n == 0:
             return False
+
         def caminho_auxiliar(V, lista_caminho, tamanho_atual):
             if tamanho_atual == n:
                 return lista_caminho
@@ -277,9 +273,9 @@ class MeuGrafo(GrafoListaAdjacencia):
             if V not in vertices_visitados:
                 vertices_visitados[V] = list()
 
-
             for aresta, vertice_oposto in destinos_ordenados.items():
-                if aresta not in lista_caminho and vertice_oposto not in lista_caminho and vertice_oposto not in vertices_visitados[V]:
+                if aresta not in lista_caminho and vertice_oposto not in lista_caminho and vertice_oposto not in \
+                        vertices_visitados[V]:
                     vertices_visitados[V].append(vertice_oposto)
                     lista_caminho.append(aresta)
                     lista_caminho.append(vertice_oposto)
@@ -294,7 +290,6 @@ class MeuGrafo(GrafoListaAdjacencia):
                     vertices_visitados[V] = list()
                     lista_caminho.pop()
                     if not lista_caminho:
-
                         return False
                     lista_caminho.pop()
                     tamanho_atual -= 1
@@ -313,3 +308,114 @@ class MeuGrafo(GrafoListaAdjacencia):
                 return resultado
 
         return False
+
+    def existe_caminho(self, quantidade_vertices, u, v):
+        '''
+        Verifica se existe caminho entre a raiz da árvore e os vértices u e v
+        :param quantidade_vertices:
+        :param u:
+        :param v:
+        :return:
+        '''
+        vertices_grafos = self.__rotulos_vertices()
+        matriz = [[0 for _ in range(quantidade_vertices)] for _ in range(quantidade_vertices)]
+
+        for aresta in self.arestas:
+            aresta = self.arestas[aresta]
+            if aresta.v1.rotulo == aresta.v2.rotulo:
+                continue
+            linha = vertices_grafos.index(aresta.v1.rotulo)
+            coluna = vertices_grafos.index(aresta.v2.rotulo)
+            matriz[linha][coluna] = 1
+            matriz[coluna][linha] = 1
+
+        for i in range(len(self.vertices)):
+            for j in range(len(self.vertices)):
+                if matriz[j][i]:
+                    for k in range(len(self.vertices)):
+                        matriz[j][k] = 1 if matriz[j][k] or matriz[i][k] else 0
+
+        return matriz[0][u] and matriz[0][v]
+
+    def kruskal(self):
+        '''
+        Algoritmo de Kruskal para encontrar a árvore geradora mínima
+        :return: Um grafo com a árvore geradora mínima
+        '''
+        arvore_minima = MeuGrafo()
+
+        fila_prioridade = PriorityQueue()
+        for aresta in self.arestas:
+            fila_prioridade.put((self.arestas[aresta].peso, self.arestas[aresta].rotulo))
+
+        vertices_grafo = list()
+        while not fila_prioridade.empty():
+
+            aresta = fila_prioridade.get()
+            aresta = self.get_aresta(aresta[1])
+
+            if aresta.v1.rotulo not in vertices_grafo:
+                vertices_grafo.append(aresta.v1.rotulo)
+            if aresta.v2.rotulo not in vertices_grafo:
+                vertices_grafo.append(aresta.v2.rotulo)
+
+            if not arvore_minima.existe_caminho(len(self.vertices), vertices_grafo.index(aresta.v1.rotulo),
+                                                vertices_grafo.index(aresta.v2.rotulo)):
+                if not arvore_minima.existe_rotulo_vertice(aresta.v1.rotulo):
+                    arvore_minima.adiciona_vertice(aresta.v1.rotulo)
+                if not arvore_minima.existe_rotulo_vertice(aresta.v2.rotulo):
+                    arvore_minima.adiciona_vertice(aresta.v2.rotulo)
+                arvore_minima.adiciona_aresta(aresta.rotulo, aresta.v1.rotulo, aresta.v2.rotulo, aresta.peso)
+
+        return arvore_minima
+
+    def prim(self):
+        '''
+        Algoritmo de Prim para encontrar a árvore geradora mínima
+        :return: Um grafo com a árvore geradora mínima
+        '''
+        arvore_minima = MeuGrafo()
+        dict_predecessor = dict()
+
+        menor_peso = float('inf')
+        aresta_menor_peso = ''
+        for aresta in self.arestas:
+            aresta = self.arestas[aresta]
+            if aresta.peso < menor_peso:
+                menor_peso = aresta.peso
+                aresta_menor_peso = aresta.rotulo
+
+        def rec_prim(v):
+            if len(self.vertices) == len(arvore_minima.vertices):
+                return arvore_minima
+
+            if v not in arestas_visitadas:
+                arestas_visitadas[v] = list()
+
+            arestas_incidentes = self.arestas_sobre_vertice(v)
+            arestas_incidentes = sorted(arestas_incidentes, key=lambda x: (self.get_aresta(x).peso, self.get_aresta(x).rotulo))
+
+            for a in arestas_incidentes:
+                a = self.get_aresta(a)
+                proximo_vertice = a.v1.rotulo if a.v1.rotulo != v else a.v2.rotulo
+                if not arvore_minima.existe_rotulo_vertice(proximo_vertice) and a.rotulo not in arestas_visitadas[v]:
+                    dict_predecessor[proximo_vertice] = v
+                    arvore_minima.adiciona_vertice(proximo_vertice)
+                    arvore_minima.adiciona_aresta(a.rotulo, a.v1.rotulo, a.v2.rotulo, a.peso)
+                    arestas_visitadas[v].append(a.rotulo)
+                    return rec_prim(proximo_vertice)
+
+            return rec_prim(dict_predecessor[v])
+
+        aresta = self.arestas[aresta_menor_peso]
+        arvore_minima.adiciona_vertice(aresta.v1.rotulo)
+        arvore_minima.adiciona_vertice(aresta.v2.rotulo)
+        arvore_minima.adiciona_aresta(aresta.rotulo, aresta.v1.rotulo, aresta.v2.rotulo, aresta.peso)
+
+        arestas_visitadas = dict()
+        arestas_visitadas[aresta.v1.rotulo] = [aresta.rotulo]
+        dict_predecessor[aresta.v2.rotulo] = aresta.v1.rotulo
+
+        resultado = rec_prim(aresta.v2.rotulo)
+
+        return resultado
