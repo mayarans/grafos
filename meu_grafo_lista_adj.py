@@ -346,7 +346,9 @@ class MeuGrafo(GrafoListaAdjacencia):
 
         fila_prioridade = PriorityQueue()
         for aresta in self.arestas:
-            fila_prioridade.put((self.arestas[aresta].peso, self.arestas[aresta].rotulo))
+            aresta = self.arestas[aresta]
+            if aresta.v1.rotulo != aresta.v2.rotulo:
+                fila_prioridade.put((aresta.peso, aresta.rotulo))
 
         vertices_grafo = list()
         while not fila_prioridade.empty():
@@ -376,6 +378,7 @@ class MeuGrafo(GrafoListaAdjacencia):
         '''
         arvore_minima = MeuGrafo()
         dict_predecessor = dict()
+        arestas_visitadas = dict()
 
         menor_peso = float('inf')
         aresta_menor_peso = ''
@@ -385,6 +388,9 @@ class MeuGrafo(GrafoListaAdjacencia):
                 menor_peso = aresta.peso
                 aresta_menor_peso = aresta.rotulo
 
+        aresta_inicio = self.arestas[aresta_menor_peso]
+        arvore_minima.adiciona_vertice(aresta_inicio.v1.rotulo)
+
         def rec_prim(v):
             if len(self.vertices) == len(arvore_minima.vertices):
                 return arvore_minima
@@ -393,29 +399,21 @@ class MeuGrafo(GrafoListaAdjacencia):
                 arestas_visitadas[v] = list()
 
             arestas_incidentes = self.arestas_sobre_vertice(v)
-            arestas_incidentes = sorted(arestas_incidentes, key=lambda x: (self.get_aresta(x).peso, self.get_aresta(x).rotulo))
+            arestas_incidentes = sorted(arestas_incidentes,
+                                        key=lambda x: (self.get_aresta(x).peso, self.get_aresta(x).rotulo))
 
             for a in arestas_incidentes:
                 a = self.get_aresta(a)
                 proximo_vertice = a.v1.rotulo if a.v1.rotulo != v else a.v2.rotulo
                 if not arvore_minima.existe_rotulo_vertice(proximo_vertice) and a.rotulo not in arestas_visitadas[v]:
-                    dict_predecessor[proximo_vertice] = v
                     arvore_minima.adiciona_vertice(proximo_vertice)
                     arvore_minima.adiciona_aresta(a.rotulo, a.v1.rotulo, a.v2.rotulo, a.peso)
+                    dict_predecessor[proximo_vertice] = v
                     arestas_visitadas[v].append(a.rotulo)
                     return rec_prim(proximo_vertice)
 
             return rec_prim(dict_predecessor[v])
 
-        aresta = self.arestas[aresta_menor_peso]
-        arvore_minima.adiciona_vertice(aresta.v1.rotulo)
-        arvore_minima.adiciona_vertice(aresta.v2.rotulo)
-        arvore_minima.adiciona_aresta(aresta.rotulo, aresta.v1.rotulo, aresta.v2.rotulo, aresta.peso)
-
-        arestas_visitadas = dict()
-        arestas_visitadas[aresta.v1.rotulo] = [aresta.rotulo]
-        dict_predecessor[aresta.v2.rotulo] = aresta.v1.rotulo
-
-        resultado = rec_prim(aresta.v2.rotulo)
+        resultado = rec_prim(aresta_inicio.v1.rotulo)
 
         return resultado

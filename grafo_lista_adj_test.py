@@ -421,6 +421,43 @@ class TestGrafo(unittest.TestCase):
         self.p_k_5.adiciona_aresta('a3', 'A', 'C', 2)
         self.p_k_5.adiciona_aresta('a4', 'B', 'D', 3)
 
+        self.p_k_6 = MeuGrafo()
+        self.p_k_6.adiciona_vertice('J')
+        self.p_k_6.adiciona_vertice('K')
+        self.p_k_6.adiciona_vertice('L')
+        self.p_k_6.adiciona_vertice('M')
+        self.p_k_6.adiciona_vertice('N')
+
+        self.p_k_6.adiciona_aresta('a1', 'J', 'K', 1)
+        self.p_k_6.adiciona_aresta('a2', 'J', 'L', 2)
+        self.p_k_6.adiciona_aresta('a3', 'J', 'M', 3)
+        self.p_k_6.adiciona_aresta('a4', 'J', 'N', 4)
+        self.p_k_6.adiciona_aresta('a5', 'K', 'L', 5)
+        self.p_k_6.adiciona_aresta('a6', 'K', 'M', 6)
+        self.p_k_6.adiciona_aresta('a7', 'K', 'N', 7)
+        self.p_k_6.adiciona_aresta('a8', 'L', 'M', 8)
+        self.p_k_6.adiciona_aresta('a9', 'L', 'N', 9)
+
+        self.p_k_7 = MeuGrafo()
+        self.p_k_7.adiciona_vertice('A')
+        self.p_k_7.adiciona_vertice('B')
+        self.p_k_7.adiciona_vertice('C')
+        self.p_k_7.adiciona_vertice('D')
+        self.p_k_7.adiciona_vertice('E')
+        self.p_k_7.adiciona_vertice('F')
+
+        self.p_k_7.adiciona_aresta('a1', 'A', 'B', 7)
+        self.p_k_7.adiciona_aresta('a2', 'A', 'C', 8)
+        self.p_k_7.adiciona_aresta('a3', 'B', 'C', 3)
+        self.p_k_7.adiciona_aresta('a4', 'B', 'D', 5)
+        self.p_k_7.adiciona_aresta('a5', 'C', 'D', 6)
+        self.p_k_7.adiciona_aresta('a6', 'C', 'E', 3)
+        self.p_k_7.adiciona_aresta('a7', 'C', 'E', 6)
+        self.p_k_7.adiciona_aresta('a8', 'D', 'E', 2)
+        self.p_k_7.adiciona_aresta('a9', 'D', 'F', 4)
+        self.p_k_7.adiciona_aresta('a10', 'E', 'F', 2)
+        self.p_k_7.adiciona_aresta('a11', 'D', 'D', 1)
+
         #Grafos resposta para testar o algorithm de prim
 
         self.prim_1_resp = MeuGrafo()
@@ -495,6 +532,32 @@ class TestGrafo(unittest.TestCase):
         self.prim_5_resp.adiciona_aresta('a4', 'B', 'D', 3)
         self.prim_5_resp.adiciona_aresta('a2', 'C', 'D', 1)
 
+        self.prim_6_resp = MeuGrafo()
+        self.prim_6_resp.adiciona_vertice('J')
+        self.prim_6_resp.adiciona_vertice('K')
+        self.prim_6_resp.adiciona_vertice('L')
+        self.prim_6_resp.adiciona_vertice('M')
+        self.prim_6_resp.adiciona_vertice('N')
+
+        self.prim_6_resp.adiciona_aresta('a1', 'J', 'K', 1)
+        self.prim_6_resp.adiciona_aresta('a5', 'K', 'L', 5)
+        self.prim_6_resp.adiciona_aresta('a8', 'L', 'M', 8)
+        self.prim_6_resp.adiciona_aresta('a9', 'L', 'N', 9)
+
+        self.prim_7_resp = MeuGrafo()
+        self.prim_7_resp.adiciona_vertice('A')
+        self.prim_7_resp.adiciona_vertice('B')
+        self.prim_7_resp.adiciona_vertice('C')
+        self.prim_7_resp.adiciona_vertice('D')
+        self.prim_7_resp.adiciona_vertice('E')
+        self.prim_7_resp.adiciona_vertice('F')
+
+        self.prim_7_resp.adiciona_aresta('a8', 'D', 'E', 2)
+        self.prim_7_resp.adiciona_aresta('a10', 'E', 'F', 2)
+        self.prim_7_resp.adiciona_aresta('a6', 'C', 'E', 3)
+        self.prim_7_resp.adiciona_aresta('a3', 'B', 'C', 3)
+        self.prim_7_resp.adiciona_aresta('a1', 'A', 'B', 7)
+
         #Grafos resposta para testar o algorithm de kruskal
 
         self.kruskal_1_resp = MeuGrafo()
@@ -568,6 +631,32 @@ class TestGrafo(unittest.TestCase):
         self.kruskal_5_resp.adiciona_aresta('a1', 'A', 'B', 1)
         self.kruskal_5_resp.adiciona_aresta('a2', 'C', 'D', 1)
         self.kruskal_5_resp.adiciona_aresta('a3', 'A', 'C', 2)
+
+        self.kruskal_6_resp = MeuGrafo()
+        self.kruskal_6_resp.adiciona_vertice('J')
+        self.kruskal_6_resp.adiciona_vertice('K')
+        self.kruskal_6_resp.adiciona_vertice('L')
+        self.kruskal_6_resp.adiciona_vertice('M')
+        self.kruskal_6_resp.adiciona_vertice('N')
+
+        self.kruskal_6_resp.adiciona_aresta('a1', 'J', 'K', 1)
+        self.kruskal_6_resp.adiciona_aresta('a2', 'J', 'L', 2)
+        self.kruskal_6_resp.adiciona_aresta('a3', 'J', 'M', 3)
+        self.kruskal_6_resp.adiciona_aresta('a4', 'J', 'N', 4)
+
+        self.kruskal_7_resp = MeuGrafo()
+        self.kruskal_7_resp.adiciona_vertice('A')
+        self.kruskal_7_resp.adiciona_vertice('B')
+        self.kruskal_7_resp.adiciona_vertice('C')
+        self.kruskal_7_resp.adiciona_vertice('D')
+        self.kruskal_7_resp.adiciona_vertice('E')
+        self.kruskal_7_resp.adiciona_vertice('F')
+
+        self.kruskal_7_resp.adiciona_aresta('a10', 'E', 'F', 2)
+        self.kruskal_7_resp.adiciona_aresta('a8', 'D', 'E', 2)
+        self.kruskal_7_resp.adiciona_aresta('a3', 'B', 'C', 3)
+        self.kruskal_7_resp.adiciona_aresta('a6', 'C', 'E', 3)
+        self.kruskal_7_resp.adiciona_aresta('a1', 'A', 'B', 7)
 
     def test_adiciona_aresta(self):
         self.assertTrue(self.g_p.adiciona_aresta('a10', 'J', 'C'))
@@ -737,6 +826,8 @@ class TestGrafo(unittest.TestCase):
         self.assertEqual(self.p_k_3.prim(), self.prim_3_resp)
         self.assertEqual(self.p_k_4.prim(), self.prim_4_resp)
         self.assertEqual(self.p_k_5.prim(), self.prim_5_resp)
+        self.assertEqual(self.p_k_6.prim(), self.prim_6_resp)
+        self.assertEqual(self.p_k_7.prim(), self.prim_7_resp)
 
     def test_kruskal(self):
         self.assertEqual(self.p_k_1.kruskal(), self.kruskal_1_resp)
@@ -744,3 +835,5 @@ class TestGrafo(unittest.TestCase):
         self.assertEqual(self.p_k_3.kruskal(), self.kruskal_3_resp)
         self.assertEqual(self.p_k_4.kruskal(), self.kruskal_4_resp)
         self.assertEqual(self.p_k_5.kruskal(), self.kruskal_5_resp)
+        self.assertEqual(self.p_k_6.kruskal(), self.kruskal_6_resp)
+        self.assertEqual(self.p_k_7.kruskal(), self.kruskal_7_resp)
